@@ -34,7 +34,11 @@ def random_recipes():
 def get_recipe(recipe_id):
     conn = sqlite3.connect('recipes.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, image_url, cuisine, prep_time FROM recipes WHERE id = ?", (recipe_id,))
+    cursor.execute("""
+        SELECT id, name, image_url, cuisine, prep_time, ingredients, instructions
+        FROM recipes
+        WHERE id = ?
+    """, (recipe_id,))
     row = cursor.fetchone()
     conn.close()
 
@@ -44,11 +48,12 @@ def get_recipe(recipe_id):
             'name': row[1],
             'image_url': row[2],
             'cuisine': row[3],
-            'prep_time': row[4]
+            'prep_time': row[4],
+            'ingredients': row[5],
+            'instructions': row[6],
         })
     else:
         return jsonify({'error': 'Recipe not found'}), 404
-
 
 if __name__ == '__main__':
     app.run(debug=True)
