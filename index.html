@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Selector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        .container {
+            margin: 20px auto;
+            width: 90%;
+            max-width: 1200px;
+        }
+        h1 {
+            color: #333;
+        }
+        .recipe-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .recipe-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            padding: 15px;
+            text-align: center;
+        }
+        .recipe-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .recipe-card h3 {
+            margin: 10px 0;
+        }
+        .recipe-card p {
+            color: #555;
+        }
+        .recipe-card button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .recipe-card button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Choose Your Recipes</h1>
+        <div class="recipe-grid" id="recipe-grid">
+            <!-- Recipes will be injected here -->
+        </div>
+    </div>
+    <script>
+        async function fetchRecipes() {
+            try {
+                // Fetch random recipes from the Flask backend
+                const response = await fetch('http://127.0.0.1:5000/get-random-recipes'); // Update URL for deployment
+                const recipes = await response.json();
+
+                // Render recipes in the grid
+                const recipeGrid = document.getElementById('recipe-grid');
+                recipeGrid.innerHTML = recipes.map(recipe => `
+                    <div class="recipe-card">
+                        <img src="${recipe.image_url}" alt="${recipe.name}">
+                        <h3>${recipe.name}</h3>
+                        <p>Cuisine: ${recipe.cuisine || 'Unknown'}</p>
+                        <p>Prep Time: ${recipe.prep_time || 'N/A'} mins</p>
+                        <button onclick="selectRecipe('${recipe.id}')">Select Recipe</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching recipes:', error);
+            }
+        }
+
+        function selectRecipe(recipeId) {
+            alert(`You selected recipe ID: ${recipeId}`);
+        }
+
+        // Fetch recipes on page load
+        fetchRecipes();
+    </script>
+</body>
+</html>
