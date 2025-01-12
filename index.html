@@ -72,7 +72,7 @@
         async function fetchRecipes() {
             try {
                 // Fetch random recipes from the Flask backend
-                const response = await fetch('http://127.0.0.1:5000/get-random-recipes'); // Update URL for deployment
+                const response = await fetch('https://recipe-selector.onrender.com/get-random-recipes'); // Update URL for deployment
                 const recipes = await response.json();
 
                 // Render recipes in the grid
