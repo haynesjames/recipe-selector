@@ -22,9 +22,8 @@ def get_random_recipes():
         {
             'id': row[0],
             'name': row[1],
-            # Check if image_url is a valid path, otherwise use placeholder
-            'image_url': row[2] if row[2] and os.path.exists(os.path.join(app.static_folder, row[2])) 
-                          else 'static/placeholder.jpg',
+            # Build the correct image URL
+            'image_url': f'static/{row[2]}' if row[2] else 'static/placeholder.jpg',
             'cuisine': row[3],
             'prep_time': row[4],
             'recipe_url': row[5]
