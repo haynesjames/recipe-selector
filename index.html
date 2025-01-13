@@ -47,16 +47,16 @@
         .recipe-card p {
             color: #555;
         }
-        .recipe-card button {
+        .recipe-card a {
+            display: inline-block;
             margin-top: 10px;
             padding: 10px 15px;
             background-color: #007bff;
             color: white;
-            border: none;
+            text-decoration: none;
             border-radius: 5px;
-            cursor: pointer;
         }
-        .recipe-card button:hover {
+        .recipe-card a:hover {
             background-color: #0056b3;
         }
     </style>
@@ -65,17 +65,15 @@
     <div class="container">
         <h1>Choose Your Recipes</h1>
         <div class="recipe-grid" id="recipe-grid">
-            <!-- Recipes will be injected here -->
+            <!-- Recipes will be dynamically added here -->
         </div>
     </div>
     <script>
         async function fetchRecipes() {
             try {
-                // Fetch random recipes from the Flask backend
-                const response = await fetch('https://recipe-selector.onrender.com/get-random-recipes'); // Update URL for deployment
+                const response = await fetch('https://recipe-selector.onrender.com/get-random-recipes');
                 const recipes = await response.json();
 
-                // Render recipes in the grid
                 const recipeGrid = document.getElementById('recipe-grid');
                 recipeGrid.innerHTML = recipes.map(recipe => `
                     <div class="recipe-card">
@@ -83,7 +81,7 @@
                         <h3>${recipe.name}</h3>
                         <p>Cuisine: ${recipe.cuisine || 'Unknown'}</p>
                         <p>Prep Time: ${recipe.prep_time || 'N/A'} mins</p>
-                        <button onclick="selectRecipe('${recipe.id}')">Select Recipe</button>
+                        <a href="${recipe.recipe_url}" target="_blank">View Recipe</a>
                     </div>
                 `).join('');
             } catch (error) {
@@ -91,11 +89,7 @@
             }
         }
 
-        function selectRecipe(recipeId) {
-            alert(`You selected recipe ID: ${recipeId}`);
-        }
-
-        // Fetch recipes on page load
+        // Call fetchRecipes when the page loads
         fetchRecipes();
     </script>
 </body>
