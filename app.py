@@ -1,8 +1,9 @@
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 import sqlite3
+import os
 
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__, static_folder='static')  # Use 'static' for local files
 CORS(app)
 
 # Function to fetch random recipes from the database
@@ -21,10 +22,12 @@ def get_random_recipes():
         {
             'id': row[0],
             'name': row[1],
-            'image_url': row[2],
+            # Check if image_url is a valid path, otherwise use placeholder
+            'image_url': row[2] if row[2] and os.path.exists(os.path.join(app.static_folder, row[2])) 
+                          else 'static/placeholder.jpg',
             'cuisine': row[3],
             'prep_time': row[4],
-            'recipe_url': row[5]  # Include the recipe URL in the response
+            'recipe_url': row[5]
         }
         for row in recipes
     ]
@@ -56,7 +59,8 @@ def get_recipe(recipe_id):
         return jsonify({
             'id': row[0],
             'name': row[1],
-            'image_url': row[2],
+            'image_url': row[2] if row[2] and os.path.exists(os.path.join(app.static_folder, row[2])) 
+                          else 'static/placeholder.jpg',
             'cuisine': row[3],
             'prep_time': row[4],
             'ingredients': row[5],
@@ -64,6 +68,11 @@ def get_recipe(recipe_id):
         })
     else:
         return jsonify({'error': 'Recipe not found'}), 404
+
+# Serve static files such as images
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory(app.static_folder, filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
