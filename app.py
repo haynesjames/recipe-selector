@@ -5,10 +5,16 @@ import sqlite3
 app = Flask(__name__, static_folder='.')
 CORS(app)
 
+# Function to fetch random recipes from the database
 def get_random_recipes():
     conn = sqlite3.connect('recipes.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, image_url, cuisine, prep_time FROM recipes ORDER BY RANDOM() LIMIT 6")
+    cursor.execute("""
+        SELECT id, name, image_url, cuisine, prep_time, recipe_url 
+        FROM recipes 
+        ORDER BY RANDOM() 
+        LIMIT 6
+    """)
     recipes = cursor.fetchall()
     conn.close()
     return [
@@ -18,18 +24,22 @@ def get_random_recipes():
             'image_url': row[2],
             'cuisine': row[3],
             'prep_time': row[4],
+            'recipe_url': row[5]  # Include the recipe URL in the response
         }
         for row in recipes
     ]
 
+# Route to serve the main index.html page
 @app.route('/')
 def home():
     return send_from_directory('.', 'index.html')
 
+# Route to fetch random recipes
 @app.route('/get-random-recipes', methods=['GET'])
 def random_recipes():
     return jsonify(get_random_recipes())
 
+# Route to fetch a specific recipe by ID
 @app.route('/get-recipe/<int:recipe_id>', methods=['GET'])
 def get_recipe(recipe_id):
     conn = sqlite3.connect('recipes.db')
