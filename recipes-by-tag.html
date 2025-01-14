@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes by Tag</title>
+</head>
+<body>
+    <header>
+        <h1>Recipes Tagged: <span id="tag-name"></span></h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="tags.html">Browse by Tags</a>
+        <a href="random.html">Random Recipes</a>
+    </nav>
+    <div class="recipe-grid" id="recipe-grid"></div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const tag = params.get('tag');
+        document.getElementById('tag-name').textContent = tag;
+
+        async function fetchRecipesByTag() {
+            try {
+                const response = await fetch(`https://recipe-selector.onrender.com/get-recipes-by-tag/${encodeURIComponent(tag)}`);
+                const recipes = await response.json();
+
+                const recipeGrid = document.getElementById('recipe-grid');
+                recipeGrid.innerHTML = recipes.map(recipe => `
+                    <div class="recipe-card">
+                        <img src="${recipe.image_url}" alt="${recipe.name}">
+                        <h3>${recipe.name}</h3>
+                        <p>Cuisine: ${recipe.cuisine || 'Unknown'}</p>
+                        <p>Prep Time: ${recipe.prep_time || 'N/A'} mins</p>
+                        <a href="${recipe.recipe_url}" target="_blank">View Recipe</a>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching recipes:', error);
+            }
+        }
+
+        fetchRecipesByTag();
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse by Tags</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Optional, external CSS file -->
+</head>
+<body>
+    <header>
+        <h1>Browse Recipes by Tags</h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="random.html">Random Recipes</a>
+    </nav>
+    <div class="tag-grid" id="tag-grid">
+        <!-- Tags will be dynamically loaded here -->
+    </div>
+    <script>
+        async function fetchTags() {
+            try {
+                const response = await fetch('https://recipe-selector.onrender.com/get-tags'); // Replace with your backend endpoint
+                const tags = await response.json();
+
+                const tagGrid = document.getElementById('tag-grid');
+                tagGrid.innerHTML = tags.map(tag => `
+                    <div class="tag-card" onclick="viewTag('${tag}')">${tag}</div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching tags:', error);
+            }
+        }
+
+        function viewTag(tag) {
+            window.location.href = `recipes-by-tag.html?tag=${encodeURIComponent(tag)}`;
+        }
+
+        fetchTags();
+    </script>
+</body>
+</html>

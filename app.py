@@ -22,7 +22,6 @@ def get_random_recipes():
         {
             'id': row[0],
             'name': row[1],
-            # Build the correct image URL
             'image_url': f'static/{row[2]}' if row[2] else 'static/placeholder.jpg',
             'cuisine': row[3],
             'prep_time': row[4],
@@ -58,8 +57,7 @@ def get_recipe(recipe_id):
         return jsonify({
             'id': row[0],
             'name': row[1],
-            'image_url': row[2] if row[2] and os.path.exists(os.path.join(app.static_folder, row[2])) 
-                          else 'static/placeholder.jpg',
+            'image_url': row[2] if row[2] else 'static/placeholder.jpg',
             'cuisine': row[3],
             'prep_time': row[4],
             'ingredients': row[5],
@@ -67,6 +65,49 @@ def get_recipe(recipe_id):
         })
     else:
         return jsonify({'error': 'Recipe not found'}), 404
+
+# Route to fetch unique tags
+@app.route('/get-tags', methods=['GET'])
+def get_tags():
+    conn = sqlite3.connect('recipes.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT DISTINCT tags FROM recipes")
+    rows = cursor.fetchall()
+    conn.close()
+
+    tags = set()
+    for row in rows:
+        if row[0]:
+            tags.update(tag.strip() for tag in row[0].split(','))
+    
+    return jsonify(sorted(tags))
+
+# Route to fetch recipes by a specific tag
+@app.route('/get-recipes-by-tag/<tag>', methods=['GET'])
+def get_recipes_by_tag(tag):
+    conn = sqlite3.connect('recipes.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, name, image_url, cuisine, prep_time, recipe_url 
+        FROM recipes 
+        WHERE tags LIKE ?
+    """, (f'%{tag}%',))
+    rows = cursor.fetchall()
+    conn.close()
+
+    recipes = [
+        {
+            'id': row[0],
+            'name': row[1],
+            'image_url': f'static/{row[2]}' if row[2] else 'static/placeholder.jpg',
+            'cuisine': row[3],
+            'prep_time': row[4],
+            'recipe_url': row[5]
+        }
+        for row in rows
+    ]
+
+    return jsonify(recipes)
 
 # Serve static files such as images
 @app.route('/static/<path:filename>')
