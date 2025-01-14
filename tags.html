@@ -4,7 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse by Tags</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Optional, external CSS file -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        nav {
+            background-color: #0056b3;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        nav a:hover {
+            background-color: #004494;
+        }
+        .tag-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .tag-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+            width: 150px;
+            font-size: 0.9em;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .tag-card:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-3px);
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -12,7 +71,7 @@
     </header>
     <nav>
         <a href="index.html">Home</a>
-        <a href="random.html">Random Recipes</a>
+        <a href="tags.html">Browse by Tags</a>
     </nav>
     <div class="tag-grid" id="tag-grid">
         <!-- Tags will be dynamically loaded here -->
