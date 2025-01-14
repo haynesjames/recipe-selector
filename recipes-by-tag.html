@@ -4,6 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipes by Tag</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+        nav {
+            background-color: #0056b3;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        nav a:hover {
+            background-color: #004494;
+        }
+        .recipe-grid {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 10px;
+        }
+        .recipe-card {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .recipe-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .recipe-card h3 {
+            margin: 10px 0 5px;
+            font-size: 1.2em;
+        }
+        .recipe-card p {
+            margin: 5px 0;
+        }
+        .recipe-card a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .recipe-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -30,8 +101,8 @@
                     <div class="recipe-card">
                         <img src="${recipe.image_url}" alt="${recipe.name}">
                         <h3>${recipe.name}</h3>
-                        <p>Cuisine: ${recipe.cuisine || 'Unknown'}</p>
-                        <p>Prep Time: ${recipe.prep_time || 'N/A'} mins</p>
+                        <p><strong>Cuisine:</strong> ${recipe.cuisine || 'Unknown'}</p>
+                        <p><strong>Prep Time:</strong> ${recipe.prep_time || 'N/A'} mins</p>
                         <a href="${recipe.recipe_url}" target="_blank">View Recipe</a>
                     </div>
                 `).join('');
